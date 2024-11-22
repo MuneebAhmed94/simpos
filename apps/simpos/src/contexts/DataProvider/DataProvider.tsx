@@ -121,9 +121,9 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
       throw new Error('POS Config data error');
     }
 
-    const { loginNumber } = await authService.refreshMetadata({
-      config_id: posConfig.id,
-    });
+    // const { loginNumber } = await authService.refreshMetadata({
+    //   config_id: posConfig.id,
+    // });
 
     const pricelists = await productPricelistRepository.findByIds(
       posConfig.usePricelist
@@ -193,7 +193,7 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
         posConfig,
         posSession: {
           ...selectedSession,
-          loginNumber,
+          //loginNumber,
         },
         pricelists,
         defaultPriceList,

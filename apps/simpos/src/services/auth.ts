@@ -19,12 +19,9 @@ export interface ServerMetadata {
 
 export const authService = {
   login: (params: LoginParams) => {
-    return simApi.post(
-      '/exchange_token',
-      {
-        params,
-      },
-    );
+    return simApi.post('/simpos/v1/sign_in', {
+      params,
+    });
   },
   saveAuthMeta: async (authMeta: AuthUserMeta) => {
     await authUserMeta.create(authMeta);

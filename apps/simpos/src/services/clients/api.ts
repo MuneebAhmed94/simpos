@@ -4,7 +4,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { AuthUserMeta } from '../db';
 
 export const simApi = axios.create({
-  baseURL: 'https://odoo13.fibotree.com',
+  baseURL: 'http://localhost:8069',
 });
 
 simApi.interceptors.response.use(
@@ -20,9 +20,10 @@ simApi.interceptors.response.use(
     });
   },
   function (error) {
-    if (error.response?.data?.includes('odoo.http.SessionExpiredException')) {
-      throw new Error('Unauthorized error');
-    }
+    console.error('ODOO', error.response?.data);
+    // if (error.response?.data?.includes('odoo.http.SessionExpiredException')) {
+    //   throw new Error('Unauthorized error');
+    // }
     throw new Error('Uncaught error');
   },
 );

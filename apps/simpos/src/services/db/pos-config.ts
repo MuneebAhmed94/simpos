@@ -7,7 +7,7 @@ export interface PosConfig {
   name: string;
   paymentMethodIds: number[];
   uuid: string;
-  employeeIds: number[];
+  //employeeIds: number[];
   usePricelist: boolean;
   availablePricelistIds: number[];
   pricelistId: [number, string];

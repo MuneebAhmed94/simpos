@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   postgresql:
     image: docker.io/bitnami/postgresql:16
@@ -24,6 +24,10 @@ services:
       - ODOO_DATABASE_PORT_NUMBER=5432
       - ODOO_DATABASE_USER=bn_odoo
       - ODOO_DATABASE_NAME=bitnami_odoo
+      - ODOO_CORS_ORIGIN=*
+      - ODOO_CORS_METHODS=GET,POST,PUT,DELETE,OPTIONS,PATCH
+      - ODOO_HTTP_HEADERS=Content-Type,Authorization,Origin,X-Requested-With,X-Frame-Options,X-CSRF-Token
+      - ODOO_ACCESS_CONTROL_ALLOW_ORIGIN=*
 volumes:
   postgresql_data:
     driver: local

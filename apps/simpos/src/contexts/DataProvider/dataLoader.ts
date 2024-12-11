@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { authService } from '../../services/auth';
 import { updateSimApiToken } from '../../services/clients';
 import { dataService } from '../../services/data';
@@ -38,6 +39,7 @@ const fetchModelData = async (
 
   const revalidate = async () => {
     const remoteData = await fetchRemoteData();
+
     const localData = await rootDb.getByTableName(model);
 
     const localDataWriteDateDict = localData.reduce(
@@ -71,7 +73,9 @@ const fetchModelData = async (
     return currentModelData;
   }
   const remoteData = await fetchRemoteData();
+
   // store all remote data to the database
+  console.log(model, remoteData);
   await rootDb.bulkUpdateTable(model, remoteData);
 
   return remoteData;
@@ -80,7 +84,26 @@ const fetchModelData = async (
 export const loadModels: LoadModel[] = [
   {
     model: 'pos.config',
-    fields: [],
+    fields: [
+      'id',
+      'name',
+      'payment_method_ids',
+      'uuid',
+      //"employeeIds",
+      'use_pricelist',
+      'available_pricelist_ids',
+      'pricelist_id',
+      'company_id',
+      'currency_id',
+      // "currency",
+      // "company",
+      'iface_tax_included',
+      'pos_session_username',
+      'module_pos_hr',
+      'printer_ids',
+      'receipt_footer',
+      'pos_session_state',
+    ],
     async load() {
       return fetchModelData(this.model, this.fields, [], (rows) => rows, {
         nocache: true,
@@ -154,6 +177,9 @@ export const loadModels: LoadModel[] = [
       'printer_type',
       'network_printer_ip',
     ],
+    async load() {
+      return [];
+    },
   },
   {
     model: 'res.partner',
@@ -189,28 +215,28 @@ export const loadModels: LoadModel[] = [
     ],
     async load() {
       return fetchModelData(this.model, this.fields, [], async (rows) => {
-        const taxIds = rows.map((row: any) => row.id);
-        const taxes = await dataService.call(
-          'account.tax',
-          'get_real_tax_amount',
-          [taxIds],
-          {},
-        );
+        // const taxIds = rows.map((row: any) => row.id);
+        // const taxes = await dataService.call(
+        //   'account.tax',
+        //   'get_real_tax_amount',
+        //   [taxIds],
+        //   {},
+        // );
 
-        if (Array.isArray(taxes)) {
-          const taxesSet = taxes.reduce((prev, curr) => {
-            return {
-              ...prev,
-              [curr.id]: curr.amount,
-            };
-          }, {});
-          return rows.map((row: any) => {
-            return {
-              ...row,
-              realTaxAmount: taxesSet[row.id],
-            };
-          });
-        }
+        // if (Array.isArray(taxes)) {
+        //   const taxesSet = taxes.reduce((prev, curr) => {
+        //     return {
+        //       ...prev,
+        //       [curr.id]: curr.amount,
+        //     };
+        //   }, {});
+        //   return rows.map((row: any) => {
+        //     return {
+        //       ...row,
+        //       realTaxAmount: taxesSet[row.id],
+        //     };
+        //   });
+        // }
 
         return rows;
       });
@@ -248,14 +274,14 @@ export const loadModels: LoadModel[] = [
       'name',
       'description',
       'type',
-      'lst_price',
+      //'lst_price',
       'list_price',
       'sequence',
       'product_variant_ids',
       'product_variant_id',
       'barcode',
       'default_code',
-      'pos_categ_id',
+      'pos_categ_ids',
       'image_128',
     ],
     indexes: '++id, posCategoryId',
@@ -281,7 +307,7 @@ export const loadModels: LoadModel[] = [
       'lst_price',
       'standard_price',
       'categ_id',
-      'pos_categ_id',
+      //'pos_categ_id',
       'taxes_id',
       'barcode',
       'default_code',

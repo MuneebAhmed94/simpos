@@ -4,7 +4,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { AuthUserMeta } from '../db';
 
 export const simApi = axios.create({
-  baseURL: 'http://localhost:8069',
+  baseURL: 'http://localhost:4005/v1/ping',
 });
 
 simApi.interceptors.response.use(
@@ -15,16 +15,16 @@ simApi.interceptors.response.use(
       );
     }
 
-    return camelcaseKeys(get(response, 'data.result', {}), {
+    return camelcaseKeys(get(response, 'data', {}), {
       deep: true,
     });
   },
   function (error) {
-    console.error('ODOO', error.response?.data);
+    console.error('ODOO', error);
     // if (error.response?.data?.includes('odoo.http.SessionExpiredException')) {
     //   throw new Error('Unauthorized error');
     // }
-    throw new Error('Uncaught error');
+    throw new Error('Uncaught error:' + error?.response);
   },
 );
 

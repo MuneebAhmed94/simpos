@@ -19,7 +19,7 @@ export interface ServerMetadata {
 
 export const authService = {
   login: (params: LoginParams) => {
-    return simApi.post('/simpos/v1/sign_in', {
+    return simApi.post('/odoo/auth', {
       params,
     });
   },

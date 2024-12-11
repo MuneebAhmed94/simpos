@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { simApi } from './clients';
-//import { authUserMeta } from './db/authUserMeta';
-//import { authUserMeta } from './db';
-
+import OdooJSONRpc from '@fernandoslim/odoo-jsonrpc';
 type SimApiCallMethod =
   | 'search_read'
   | 'read'
@@ -38,39 +35,44 @@ interface ReadParams {
   kwargs?: any;
 }
 
+const odoo = new OdooJSONRpc({
+  baseUrl: 'http://localhost',
+  port: 8069,
+  db: 'bitnami_odoo',
+  username: 'admin',
+  password: 'admin',
+});
+
 export const dataService = {
   async call(
     model: string,
     method: SimApiCallMethod,
     args: Array<any>,
     kwargs: any,
-  ): Promise<Promise<any>> {
+  ): Promise<any> {
     if (kwargs) {
       kwargs.context = {
         ...kwargs.context,
       };
     }
-
-    // const user = await authUserMeta.first();
-
-    // console.log(user);
-
-    return simApi.post(`/odoo3`, {
-      //endpoint: `/web/dataset/call_kw/${model}/${method}`,
-      //token: user?.accessToken,
-      jsonrpc: '2.0',
-      method: 'call',
-      params: {
-        model,
-        method,
-        args,
-        kwargs,
-      },
-      id: Math.floor(Math.random() * 1000 * 1000 * 1000),
-    });
+    await odoo.connect();
+    return odoo.call_kw(model, method, args);
+    // return simApi.post(`/web/dataset/call_kw/${model}/${method}`, {
+    //   jsonrpc: '2.0',
+    //   method: 'call',
+    //   params: {
+    //     model,
+    //     method,
+    //     args,
+    //     kwargs,
+    //   },
+    //   id: Math.floor(Math.random() * 1000 * 1000 * 1000),
+    // });
   },
-  searchRead({ model, ...params }: SearchReadParams): Promise<any> {
-    return this.call(
+  async searchRead({ model, ...params }: SearchReadParams): Promise<any> {
+    await odoo.connect();
+    return odoo.call_kw(
+      //return this.call(
       model,
       'search_read',
       [],

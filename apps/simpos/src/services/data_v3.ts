@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { simApi } from './clients';
-//import { authUserMeta } from './db/authUserMeta';
 //import { authUserMeta } from './db';
 
 type SimApiCallMethod =
@@ -51,12 +49,10 @@ export const dataService = {
       };
     }
 
-    // const user = await authUserMeta.first();
+    //const user = await authUserMeta.first();
 
-    // console.log(user);
-
-    return simApi.post(`/odoo3`, {
-      //endpoint: `/web/dataset/call_kw/${model}/${method}`,
+    return simApi.post(`/odoo`, {
+      endpoint: `/web/dataset/call_kw/${model}/${method}`,
       //token: user?.accessToken,
       jsonrpc: '2.0',
       method: 'call',

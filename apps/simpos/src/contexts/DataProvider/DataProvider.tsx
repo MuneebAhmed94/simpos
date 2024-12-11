@@ -10,7 +10,7 @@ import {
 import { worker } from '../../workers';
 
 import { SessionManager } from '../../apps/pos/components/SessionManager';
-import { authService } from '../../services/auth';
+//import { authService } from '../../services/auth';
 import {
   AccountTax,
   accountTaxRepository,
@@ -117,6 +117,7 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
     const posConfig = await posConfigRepository.findById(
       selectedSession.posConfigId,
     );
+
     if (!posConfig) {
       throw new Error('POS Config data error');
     }
@@ -126,10 +127,14 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
     // });
 
     const pricelists = await productPricelistRepository.findByIds(
-      posConfig.usePricelist
+      posConfig.use_pricelist
         ? posConfig.availablePricelistIds
         : [posConfig.pricelistId[0]],
     );
+
+    console.log('PL', 'posConfig', posConfig);
+    console.log('PL', 'pricelists', pricelists);
+
     if (pricelists.length === 0) {
       throw new Error('Product pricelist does not setup properly');
     }
@@ -151,7 +156,7 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
     const printers = await restaurantPrinterRepository.all();
 
     const activePrinters = printers.filter(
-      (printer) => ~posConfig.printerIds.indexOf(printer.id),
+      (printer) => ~posConfig.pricelistId.indexOf(printer.id),
     );
     const printersDict = keyBy(activePrinters, 'id');
     const categoryPrinterIdsMap: Record<string, Record<string, boolean>> = {};

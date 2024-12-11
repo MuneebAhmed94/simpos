@@ -61,6 +61,7 @@ export const orderRepository = {
       ].join('-');
 
     let orderId = buildOrderIdFromSequenceNumber(sequenceNumber);
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const checkOrder = await orderRepository.findById(orderId);
       if (!checkOrder) {

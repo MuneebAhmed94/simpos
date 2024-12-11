@@ -1,4 +1,11 @@
-import React, { PropsWithChildren, useCallback, useContext, useEffect, useReducer } from 'react';
+/* eslint-disable no-case-declarations */
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react';
 import dayjs from 'dayjs';
 import { ActiveOrderExtension } from '../../hooks/extensions/order-extension';
 import { OrderLineExtension } from '../../hooks/extensions/order-line-extension';
@@ -98,9 +105,8 @@ const initialState: OrderManagerState = {
   activeOrder: undefined,
 };
 
-const OrderManagerStateContext = React.createContext<OrderManagerState>(
-  initialState,
-);
+const OrderManagerStateContext =
+  React.createContext<OrderManagerState>(initialState);
 
 const OrderManagerDispatchContext = React.createContext<
   OrderManagerDispatch | undefined
@@ -202,7 +208,9 @@ export function orderManagerReducer(
   }
 }
 
-export const OrderManager: React.FunctionComponent<PropsWithChildren> = ({ children }) => {
+export const OrderManager: React.FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(orderManagerReducer, initialState);
   const globalDataDispatch = useGlobalDataDispatch();
   const data = useData();
@@ -321,7 +329,7 @@ export const OrderManager: React.FunctionComponent<PropsWithChildren> = ({ child
       return canBeMergeOrderLine;
     }
 
-    const price = getPrice(variant, 1, data)
+    const price = getPrice(variant, 1, data);
     const orderLineId = await orderLineRepository.create({
       orderId: state.activeOrderId,
       // TODO: Use getPrice function and check about fiscalPosition
@@ -437,7 +445,9 @@ export const OrderManager: React.FunctionComponent<PropsWithChildren> = ({ child
         employee_id: data.cashier?.id,
         uid: order.id,
         sequence_number: order.sequenceNumber,
-        creation_date: new Date().toISOString(),
+        // creation_date: new Date().toISOString(),
+        //order_date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        date_order: new Date().toISOString(),
         fiscal_position_id: false,
         server_id: false,
         to_invoice: false,

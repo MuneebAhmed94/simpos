@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { dataService } from './data';
 
 export interface RemotePosOrder {
@@ -98,15 +99,15 @@ export const orderService = {
             'user_id',
             'partner_id',
             'fiscal_position_id',
-            'invoice_group',
-            'table_id',
-            'customer_count',
+            // 'invoice_group',
+            // 'table_id',
+            //'customer_count',
             'lines',
             'amount_tax',
             'amount_total',
             'payment_ids',
-            'location_id',
-            'picking_id',
+            //'location_id',
+            //'picking_id',
             'session_move_id',
             'pos_reference',
             'company_id',

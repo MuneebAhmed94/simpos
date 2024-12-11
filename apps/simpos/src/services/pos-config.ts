@@ -2,6 +2,15 @@ import { dataService } from './data';
 
 export const posConfigService = {
   createSession(configId: number) {
-    return dataService.call('pos.config', 'open_session_cb', [[configId]], {});
+    return dataService.call(
+      'pos.session',
+      'create',
+      [
+        {
+          config_id: configId,
+        },
+      ],
+      {},
+    );
   },
 };

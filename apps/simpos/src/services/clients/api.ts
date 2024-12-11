@@ -24,7 +24,7 @@ simApi.interceptors.response.use(
     // if (error.response?.data?.includes('odoo.http.SessionExpiredException')) {
     //   throw new Error('Unauthorized error');
     // }
-    throw new Error('Uncaught error:' + error?.response);
+    throw new Error('Uncaught error:' + error?.message);
   },
 );
 

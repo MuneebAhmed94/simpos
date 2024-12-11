@@ -8,6 +8,7 @@ export const posConfigService = {
       [
         {
           config_id: configId,
+          state: 'opened',
         },
       ],
       {},

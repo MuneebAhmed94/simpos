@@ -20,7 +20,9 @@ type SimApiCallMethod =
   | 'process'
   | 'button_done'
   | 'button_cancel'
-  | 'action_pos_session_open';
+  | 'action_pos_session_open'
+  | 'try_cash_in_out'
+  | 'log_partner_message';
 
 interface SearchReadParams {
   model: string;

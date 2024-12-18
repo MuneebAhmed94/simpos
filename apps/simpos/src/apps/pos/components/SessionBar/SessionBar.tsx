@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Flex,
@@ -16,9 +17,12 @@ import {
 } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import React, { useCallback, useEffect, useState } from 'react';
-import { IconSync, IconWifiSlash } from '../../../../components/icons';
+import {
+  IconCreditCard,
+  IconSync,
+  IconWifiSlash,
+} from '../../../../components/icons';
 
-import { IconBell } from '../../../../components/icons/output/IconBell';
 import { IconWifi } from '../../../../components/icons/output/IconWifi';
 import {
   useData,
@@ -27,6 +31,7 @@ import {
 import { usePreference } from '../../../../contexts/PreferenceProvider';
 import { Employee, employeeRepository } from '../../../../services/db/employee';
 import { EmployeeRow } from './EmployeeRow';
+import { posSessionService } from '../../../../services/pos-session';
 
 const IconWrapper = styled(Flex)`
   width: 2rem;
@@ -42,10 +47,16 @@ export const SessionBar: React.FunctionComponent<SessionBarProps> = ({
 }) => {
   const { isOnline } = usePreference();
   const [showChangeCashiser, setShowChangeCashiser] = useState(false);
+  const [showCashModal, setShowCashModal] = useState(false);
   const [selectEmployee, setSelectEmployee] = useState<Employee>();
-  const { cashier, posConfig, company } = useData();
+  const { cashier, posConfig, company, posSession } = useData();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const globalDataDispatch = useGlobalDataDispatch();
+
+  const [cashAmount, setCashAmount] = useState(0);
+  const [cashOperation, setCashOperation] = useState('in');
+  const [cashReason, setCashReason] = useState('');
+
   const changeCashier = useCallback(() => {
     if (posConfig.modulePosHr) {
       setShowChangeCashiser(true);
@@ -80,6 +91,21 @@ export const SessionBar: React.FunctionComponent<SessionBarProps> = ({
     setShowChangeCashiser(false);
   };
 
+  const submitCash = async () => {
+    if (cashAmount != 0) {
+      await posSessionService.addCashSession(
+        posSession.id,
+        cashOperation,
+        cashAmount,
+        cashReason,
+      );
+    }
+
+    setShowCashModal(false);
+    setCashAmount(0);
+    setCashReason('');
+  };
+
   return (
     <>
       <Flex {...boxProps}>
@@ -108,7 +134,7 @@ export const SessionBar: React.FunctionComponent<SessionBarProps> = ({
             )}
           </IconWrapper>
           <IconWrapper>
-            <IconBell size="24" />
+            <IconCreditCard size="24" onClick={() => setShowCashModal(true)} />
           </IconWrapper>
           <Stack
             as={posConfig.modulePosHr ? 'button' : 'div'}
@@ -158,6 +184,60 @@ export const SessionBar: React.FunctionComponent<SessionBarProps> = ({
             >
               Select
             </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={showCashModal}
+        onClose={onCloseChangeCashiser}
+        scrollBehavior="inside"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Manage Cash In/Out</ModalHeader>
+          <ModalBody>
+            <input
+              type="radio"
+              name="cashOperation"
+              onClick={() => {
+                setCashOperation('in');
+              }}
+            />
+            &nbsp;Cash In&nbsp;&nbsp;
+            <input
+              type="radio"
+              name="cashOperation"
+              onClick={() => {
+                setCashOperation('out');
+              }}
+            />
+            &nbsp;Cash Out
+            <br />
+            <br />
+            <input
+              type="number"
+              placeholder="Enter Cash"
+              style={{ border: '2px solid black', width: 200 }}
+              onKeyUp={(e: any) => {
+                setCashAmount(e.target.value);
+              }}
+            />
+            <br />
+            <br />
+            <textarea
+              rows={3}
+              placeholder="Enter Reason"
+              style={{ border: '2px solid black', width: 200 }}
+              onKeyUp={(e: any) => {
+                setCashReason(e.target.value);
+              }}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="green" onClick={submitCash}>
+              Confirm
+            </Button>
+            <Button onClick={() => setShowCashModal(false)}>Dismiss</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

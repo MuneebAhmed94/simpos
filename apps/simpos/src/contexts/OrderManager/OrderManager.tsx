@@ -442,7 +442,7 @@ export const OrderManager: React.FunctionComponent<PropsWithChildren> = ({
         pricelist_id: order.pricelistId,
         partner_id: order.partnerId || false,
         user_id: userMeta?.uid,
-        employee_id: data.cashier?.id,
+        employee_id: 6,
         uid: order.id,
         sequence_number: order.sequenceNumber,
         // creation_date: new Date().toISOString(),

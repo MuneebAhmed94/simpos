@@ -3,6 +3,7 @@ import { dataService } from './data';
 
 export const posSessionService = {
   getSession(sessionId: number) {
+    console.log('====> i amhere t o get session');
     return dataService
       .call(
         'pos.session',
@@ -34,7 +35,32 @@ export const posSessionService = {
         return null;
       });
   },
-
+  getCashEndOfLastSession() {
+    return dataService
+      .call(
+        'pos.session',
+        'search_read',
+        [
+          [['state', '=', 'closed']],
+          ['id', 'name', 'cash_register_balance_end_real'],
+          0,
+          1,
+          'id desc',
+        ],
+        {},
+      )
+      .then((sessions: any) => {
+        if (Array.isArray(sessions) && sessions.length > 0) {
+          const lastSession = sessions[0];
+          return {
+            sessionId: lastSession.id,
+            sessionName: lastSession.name,
+            cashEnd: lastSession.cashRegisterBalanceEndReal,
+          };
+        }
+        return null;
+      });
+  },
   closeSession(sessionId: number) {
     return dataService.call(
       'pos.session',

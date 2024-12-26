@@ -15,6 +15,7 @@ import {
   orderLineRepository,
   partnerRepository,
   ProductVariant,
+  productRepository,
 } from '../../services/db';
 import { Order, orderRepository } from '../../services/db/order';
 import { orderService } from '../../services/order';
@@ -26,6 +27,7 @@ import {
 } from '../../services/db/order-snapshot';
 import { useAuth } from '../AuthProvider';
 import { getPrice } from '../../hooks/helpers/price';
+import { syncData } from '../DataProvider/dataLoader';
 
 export interface PaidContext {
   amount: number;
@@ -372,6 +374,9 @@ export const OrderManager: React.FunctionComponent<PropsWithChildren> = ({
     try {
       await orderRepository.delete(orderPayload.id);
       await orderService.createOrders([[orderPayload]]);
+
+      await productRepository.reset();
+      await syncData(userMeta, worker);
     } catch (e) {
       console.error(e);
       await orderSnapshotRepository.create(orderPayload);

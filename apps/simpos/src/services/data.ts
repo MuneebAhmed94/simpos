@@ -54,13 +54,7 @@ export const dataService = {
       };
     }
 
-    // const user = await authUserMeta.first();
-
-    // console.log(user);
-
-    return simApi.post(`/odoo3`, {
-      //endpoint: `/web/dataset/call_kw/${model}/${method}`,
-      //token: user?.accessToken,
+    return simApi.post(`/odoo`, {
       jsonrpc: '2.0',
       method: 'call',
       params: {

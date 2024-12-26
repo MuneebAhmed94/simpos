@@ -127,13 +127,10 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
     // });
 
     const pricelists = await productPricelistRepository.findByIds(
-      posConfig.use_pricelist
+      posConfig.usePricelist
         ? posConfig.availablePricelistIds
         : [posConfig.pricelistId[0]],
     );
-
-    console.log('PL', 'posConfig', posConfig);
-    console.log('PL', 'pricelists', pricelists);
 
     if (pricelists.length === 0) {
       throw new Error('Product pricelist does not setup properly');

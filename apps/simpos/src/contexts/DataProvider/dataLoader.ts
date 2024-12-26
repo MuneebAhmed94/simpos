@@ -75,7 +75,6 @@ const fetchModelData = async (
   const remoteData = await fetchRemoteData();
 
   // store all remote data to the database
-  console.log(model, remoteData);
   await rootDb.bulkUpdateTable(model, remoteData);
 
   return remoteData;
@@ -283,6 +282,7 @@ export const loadModels: LoadModel[] = [
       'default_code',
       'pos_categ_ids',
       'image_128',
+      'qty_available',
     ],
     indexes: '++id, posCategoryId',
     async load() {
@@ -319,6 +319,7 @@ export const loadModels: LoadModel[] = [
       'tracking',
       'sequence',
       'image_128',
+      'qty_available',
     ],
     indexes: '++id, productTemplateId,barcode',
     async load() {

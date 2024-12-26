@@ -42,10 +42,9 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = ({
           <Heading size="sm" color="brand.100">
             {formatCurrency(price, 'Product Price')}
           </Heading>
+          <p>Qty: {product.qtyAvailable}</p>
           {product.productVariantIds.length > 1 && (
-            <Text fontSize="sm">
-              Có {product.productVariantIds.length} biến thể
-            </Text>
+            <Text fontSize="sm">~{product.productVariantIds.length}</Text>
           )}
         </Flex>
       </Box>

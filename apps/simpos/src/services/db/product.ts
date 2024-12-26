@@ -14,6 +14,7 @@ export interface Product {
   productVariantId: [number, string];
   posCategoryId: number;
   productVariants: ProductVariant[];
+  qtyAvailable: string;
 }
 
 export const productRepository = {
@@ -52,5 +53,8 @@ export const productRepository = {
           })),
       ),
     );
+  },
+  async reset(): Promise<void> {
+    await this.db.clear();
   },
 };

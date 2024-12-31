@@ -22,6 +22,8 @@ type SimApiCallMethod =
   | 'button_cancel'
   | 'action_pos_session_open'
   | 'try_cash_in_out'
+  | 'post_closing_cash_details'
+  | 'get_closing_control_data'
   | 'log_partner_message';
 
 interface SearchReadParams {

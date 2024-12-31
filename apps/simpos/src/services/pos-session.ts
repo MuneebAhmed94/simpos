@@ -34,8 +34,59 @@ export const posSessionService = {
         return null;
       });
   },
+  getCashEndOfLastSession() {
+    return dataService
+      .call(
+        'pos.session',
+        'search_read',
+        [
+          [['state', '=', 'closed']],
+          ['id', 'name', 'cash_register_balance_end_real'],
+          0,
+          1,
+          'id desc',
+        ],
+        {},
+      )
+      .then((sessions: any) => {
+        if (Array.isArray(sessions) && sessions.length > 0) {
+          const lastSession = sessions[0];
+          return {
+            sessionId: lastSession.id,
+            sessionName: lastSession.name,
+            cashEnd: lastSession.cashRegisterBalanceEndReal,
+          };
+        }
+        return null;
+      });
+  },
 
-  closeSession(sessionId: number) {
+  async getClosingControlData(sessionId: number) {
+    try {
+      const result = await dataService.call(
+        'pos.session',
+        'get_closing_control_data',
+        [[sessionId]],
+        {},
+      );
+      return result;
+    } catch (error) {
+      console.error('Error in getClosingControlData:', error);
+      throw error;
+    }
+  },
+  postClosingControlData(sessionId: number, cash_amount: number) {
+    return dataService.call(
+      'pos.session',
+      'post_closing_cash_details',
+      [[sessionId]],
+      { counted_cash: cash_amount },
+    );
+  },
+  async closeSession(sessionId: number) {
+    const res = await this.getClosingControlData(sessionId);
+    const cashAmount = res.defaultCashDetails.amount;
+    await this.postClosingControlData(sessionId, Number(cashAmount));
     return dataService.call(
       'pos.session',
       'action_pos_session_closing_control',

@@ -17,6 +17,8 @@ type SimApiCallMethod =
   | 'process_cancel_backorder'
   | 'process'
   | 'button_done'
+  | 'post_closing_cash_details'
+  | 'get_closing_control_data'
   | 'button_cancel';
 
 interface SearchReadParams {

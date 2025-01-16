@@ -62,7 +62,7 @@ export const ProductsGrid: React.FunctionComponent = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Chọn biến thể</ModalHeader>
+          <ModalHeader>Select variation</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {selectingVariants.length > 0 && (
